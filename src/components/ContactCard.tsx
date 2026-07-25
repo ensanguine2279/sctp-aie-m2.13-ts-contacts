@@ -1,6 +1,6 @@
 type ContactCardProps = {
   name: string;
-  email?: string;
+  email: string | null;
   onRemove?: () => void;
 };
 
