@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import type { Contact } from "./types/Contact";
 
 import { useAuth } from "./contexts/AuthContext";
+import { useContacts } from "./contexts/ContactsContext";
 
 import { SearchBar } from "./components/SearchBar";
 import { ContactList } from "./components/ContactList";
@@ -16,8 +17,7 @@ const appTitle: string = "ts-contacts";
 
 export default function App() {
   //const { user, login, logout } = useAuth();
-
-  const [contacts, setContacts] = useState<Contact[]>([]);
+  const { contacts, setContacts, addContact, removeContact } = useContacts();
 
   const [query, setQuery] = useState("");
   const [newName, setNewName] = useState("");
@@ -51,14 +51,6 @@ export default function App() {
   const filtered = contacts.filter((c) =>
     c.name.toLowerCase().includes(query.toLowerCase()),
   );
-
-  const addContact = (newContact: Contact) => {
-    setContacts((prev) => [...prev, newContact]);
-  };
-
-  const removeContact = (id: number) => {
-    setContacts((prev) => prev.filter((c) => c.id !== id));
-  };
 
   const handleAdd = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
