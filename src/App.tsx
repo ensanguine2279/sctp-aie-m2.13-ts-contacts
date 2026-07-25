@@ -2,7 +2,6 @@
 import type React from "react";
 
 import { useState, useEffect } from "react";
-
 import type { Contact } from "./types/Contact";
 
 import { useAuth } from "./contexts/AuthContext";
@@ -27,6 +26,8 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let ignore = false;
+
     const loadContacts = async () => {
       setLoading(true);
       try {
@@ -37,16 +38,24 @@ export default function App() {
         }
 
         const data: Contact[] = await response.json();
-        setContacts(data);
+        if (!ignore) {
+          setContacts(data);
+        }
       } catch (err) {
-        setError((err as Error).message);
+        if (!ignore) {
+          setError((err as Error).message);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     loadContacts();
-  }, []);
+
+    return () => {
+      ignore = true;
+    };
+  }, [setContacts]);
 
   const filtered = contacts.filter((c) =>
     c.name.toLowerCase().includes(query.toLowerCase()),
